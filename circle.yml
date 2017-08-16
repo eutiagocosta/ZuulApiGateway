@@ -1,0 +1,102 @@
+##|------------------------------------------------------------------------|
+##|              CIRCLE.YML ----> ARQUIVO PARA CI/CD PELO CIRCLECI         |
+##|----------------------------------------------------------------------- |
+##|                          LEVI LUGATO - BEBLUE                          |
+##|                                                             28/06/2016 |
+##|------------------------------------------------------------------------|
+machine:
+  java:
+    version: oraclejdk8
+  services:
+    - docker
+#enxerga todas as branchs
+general:
+  branches:
+    only:
+      - RC
+      - develop
+compile:
+  override:
+    - ./gradlew build -x test
+test:
+  pre:
+    - echo ''
+    - rm -f keys.env; rm -f vars.env
+    - cat env.example | sed s/\=.*$// > keys.env
+    - cat keys.env | while read line; do echo $line=$(printenv $line) >> circle/vars.env; done
+    - >
+           if [[ $CIRCLE_BRANCH == "RC" ]]; then
+                echo PROFILE=stage >>  circle/vars.env
+           elif [ -n $CIRCLE_TAG ]; then
+                echo PROFILE=prod >>  circle/vars.env
+           else
+                echo PROFILE=teste >> circle/vars.env
+           fi
+    - cat circle/vars.env
+  override:
+    - >
+           if [[ $CIRCLE_BRANCH == "RC" ]]; then
+              docker build -f ./docker/stage/Dockerfile -t wallet_api-gateway . ; sleep 30
+           else
+              docker build -f ./docker/prod/Dockerfile -t wallet_api-gateway . ; sleep 30
+           fi
+  post:
+    - aws --region ${AWS_REGION} ecr get-login | sh;
+    - >
+           if [ -z $CIRCLE_TAG ]; then
+              docker tag wallet_api-gateway ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/beblue-api-gateway;
+              docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/beblue-api-gateway
+           else
+              docker tag wallet_api-gateway ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/beblue-api-gateway:$CIRCLE_TAG;
+              docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/beblue-api-gateway:$CIRCLE_TAG
+           fi
+    - mkdir circle/scripts
+    - >
+           if [ -z $CIRCLE_TAG ]; then
+              wget --no-check-certificate --no-proxy 'https://s3.amazonaws.com/devopstemplates.beblue.com.br/template_docker-stack-update.sh'
+           else
+              wget --no-check-certificate --no-proxy 'https://s3.amazonaws.com/devopstemplates.beblue.com.br/template_docker-stack-update_prod.sh'
+           fi
+    - wget --no-check-certificate --no-proxy 'https://s3.amazonaws.com/devopstemplates.beblue.com.br/codedeploy-agent.sh'
+    - wget --no-check-certificate --no-proxy 'https://s3.amazonaws.com/devopstemplates.beblue.com.br/test-curl.sh'
+    - cp codedeploy-agent.sh test-curl.sh circle/scripts/
+    - >
+            if [ -z $CIRCLE_TAG ]; then
+                cp template_docker-stack-update.sh circle/scripts
+            else
+                cp template_docker-stack-update_prod.sh circle/scripts
+            fi
+    - chmod +x circle/scripts/*
+    - >
+            if [ -z $CIRCLE_TAG ]; then
+                cd circle/scripts && ./template_docker-stack-update.sh
+            else
+                cd circle/scripts && ./template_docker-stack-update_prod.sh
+            fi
+    - cd circle/scripts && ./test-curl.sh
+    - echo 'DEPLOY'
+deployment:
+  staging:
+   branch: RC
+   codedeploy:
+      wallet-api-gateway-stage:
+        application_root: /
+        revision_location:
+          revision_type: S3
+          s3_location:
+            bucket: circleci-codedeploy.beblue.com.br
+            key_pattern: wallet-api-gateway-stage{SHORT_COMMIT}-{BUILD_NUM}.tar.gz
+        region: us-east-1
+        deployment_group: wallet-api-gateway
+  prod:
+   tag: /[0-9]+(\.[0-9]+)*/
+   codedeploy:
+      wallet-api-gateway:
+        application_root: /
+        revision_location:
+          revision_type: S3
+          s3_location:
+            bucket: circleci-codedeploy.beblue.com.br
+            key_pattern: wallet-api-gateway{SHORT_COMMIT}-{BUILD_NUM}.tar.gz
+        region: us-east-1
+        deployment_group: wallet-api-gateway

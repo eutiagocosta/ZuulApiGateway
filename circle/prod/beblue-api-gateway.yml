@@ -1,0 +1,21 @@
+version: '3'
+services:
+  api:
+    env_file:
+      - /home/ubuntu/beblue-api-gateway/vars.env
+    image: 743204975336.dkr.ecr.us-east-1.amazonaws.com/beblue-api-gateway:${CIRCLE_TAG}
+    deploy:
+      replicas: 4
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+       condition: on-failure
+       delay: 10s
+       max_attempts: 2
+    ports:
+      - "8000:8000"
+networks:
+  default:
+    external:
+      name: wallet

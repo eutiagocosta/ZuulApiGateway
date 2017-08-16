@@ -1,0 +1,8 @@
+# ZuulApiGateway
+
+#Payload for example
+
+POST -> http://localhost:8000/api/wallet/** {  
+  "param": "ExJ0EuMWW28fM5MrT+Sd0Kd8a/sE7EwWuBNQo9HvATxbYBSucEEtzbSfqDTT3Zt0paSa14c8wPFhRi6D9xWt9F7oJ1/naMHWc9bmMSYd4Jqy1H2b/9ns3ttTZmtOKQJT+NEL4+9Srcx2kh9tydmW3CzGIrRyY2zTe0Yjcy4eNzAn0nynKCUDM5pr4NRDgltWUYblymdvCt4NyE78Rc4400ZpgI9JRW3X8ScXxEU7WklBmpZVQj8u/NF6tzPtzV8/qX2biXy1pfQf6YnCFo+FsOdllgknUabx4qvBUzE2Y+M=",
+  "param1": "CMuxJJ2qKdZdgZKB/V5vInuqBMFRpx3gyoYl25k/btG62T8k3XZ1DDVs1dmqp+hMVzLz+ISDJyNwGb010xqt5JeWBHeV1p3GsG40kHWA4WwxB7oIkUwrHKDeMn9/9E5ChFMORa/2brlQu7HlMQR24hJE1+v3t0CP1buj8Ue/rhpfyZ4hv8KGGD45eeve6wvCnbahOIrFp2Ntz0z+CraoNcq3BDy6gTW+X5rRTHiiH73wSwplkDWriQFks6reLgHf983gYU96lCrcrvU2g4Ur3ukAXS2fOK1f6FfWvKeieIlgISCKerLHYXW5E2joOUv1mUGxI0p2Y66+0ST+zNoNIA=="
+}

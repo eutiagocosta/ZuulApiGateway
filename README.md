@@ -2,7 +2,26 @@
 
 #Payload for example
 
-POST -> http://localhost:8000/api/wallet/** {  
-  "param": "ExJ0EuMWW28fM5MrT+Sd0Kd8a/sE7EwWuBNQo9HvATxbYBSucEEtzbSfqDTT3Zt0paSa14c8wPFhRi6D9xWt9F7oJ1/naMHWc9bmMSYd4Jqy1H2b/9ns3ttTZmtOKQJT+NEL4+9Srcx2kh9tydmW3CzGIrRyY2zTe0Yjcy4eNzAn0nynKCUDM5pr4NRDgltWUYblymdvCt4NyE78Rc4400ZpgI9JRW3X8ScXxEU7WklBmpZVQj8u/NF6tzPtzV8/qX2biXy1pfQf6YnCFo+FsOdllgknUabx4qvBUzE2Y+M=",
-  "param1": "CMuxJJ2qKdZdgZKB/V5vInuqBMFRpx3gyoYl25k/btG62T8k3XZ1DDVs1dmqp+hMVzLz+ISDJyNwGb010xqt5JeWBHeV1p3GsG40kHWA4WwxB7oIkUwrHKDeMn9/9E5ChFMORa/2brlQu7HlMQR24hJE1+v3t0CP1buj8Ue/rhpfyZ4hv8KGGD45eeve6wvCnbahOIrFp2Ntz0z+CraoNcq3BDy6gTW+X5rRTHiiH73wSwplkDWriQFks6reLgHf983gYU96lCrcrvU2g4Ur3ukAXS2fOK1f6FfWvKeieIlgISCKerLHYXW5E2joOUv1mUGxI0p2Y66+0ST+zNoNIA=="
+You need to create an endpoint that will reply to http://localhost:8010/card-store
+
+Zuul will decrypt exactly a payload equal to this.
+
+{
+	"card"{
+		"cvv":"123",
+		"expMonth":12,
+		"expYear":2031,
+		"favorite":false,
+		"holderName":"AAAAAA",
+		"isSelected":false,
+		"cardNumber":"1111111111111117"
+	},
+	"document":"12345678909",
+	"email":"beblueteste@beblueteste.com.br"
+}
+
+POST -> http://localhost:8000/api/wallet/card-manager/customers/123456/cards 
+
+{
+"param":"FipWvHnuO3tWco8t57vAZC416t0Sl4LDi7HtYLf/hsRPNQ5VZt8N6E3ftozbmFA7Po93QgoXPwSL\nElEPYST/H601J7DNTIWvmKNUgWFKoxIgG08Spxaioi/50Rh3SXOVL43BbllGdS0JR1g9T7WYdMjp\nH6Fzn5CT8TBCKO5K0GDXW2qQ9n0wkAXctTie//QzUxEmqL+/Jn9OgtjOGhXTZM3IusKUXXsuMhDw\nj7pz4BBtP0Sff6ciXqg2lOqxzTnIDcyKMRL/5OkS9m4ghGHxkQ\u003d\u003d\n","param1":"ozOOCyUfp00ZnBYGDiYcJulxtggYVrYHyVtTX4zm8eU0LMFGARwqu6hV6gm5rqk8SQHOzuAyQxeW\nd59Ig7klD7e8dTqOOF4vf6bgsSDzcNO8wIjV11Zt4WkcZ11lJwsD6Kz5BPSTt7Y+IJI9QoaKdqjF\nwZoz9B9b1mLysm06eVmxK8czYUzW2ebFWCOiMmNLi8aG8Eq/VpFFF1p/qEjNSWjVtlveDtbEZfyX\nlqhg/s1nnfwrxEpaZ73+v/4Nqo+lT/WMI+HA+BR/4We3ey2D/K/fdSVsovSbdMyGOcDwNQlGPrSp\n2vA0XuSMhZojHFlfwZm5gkE5GUkIVjsq8V691g\u003d\u003d\n"
 }

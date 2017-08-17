@@ -1,0 +1,18 @@
+authService:
+  url: ${AUTH_SERVICE}
+
+server:
+  port: 8080
+
+zuul:
+  prefix: /api
+  routes:
+    card-manager:
+      path: /wallet/card-manager/**
+      url: http://localhost:8010/card-store
+  sensitive-headers: Cookie,Set-Cookie
+  
+ribbon:
+  eureka:
+    enabled: false
+  

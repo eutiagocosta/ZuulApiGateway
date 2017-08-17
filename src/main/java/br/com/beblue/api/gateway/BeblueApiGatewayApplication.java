@@ -29,4 +29,5 @@ public class BeblueApiGatewayApplication {
         return new SimpleFilter();
     }
 
+
 }

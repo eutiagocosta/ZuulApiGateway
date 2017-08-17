@@ -5,7 +5,7 @@ import java.io.InputStream;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
+
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.cloud.netflix.zuul.util.ZuulRuntimeException;
@@ -13,6 +13,7 @@ import org.springframework.cloud.netflix.zuul.util.ZuulRuntimeException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.netflix.zuul.exception.ZuulException;
+import com.netflix.zuul.http.HttpServletRequestWrapper;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
 
 import br.com.beblue.domain.Cryptography;
